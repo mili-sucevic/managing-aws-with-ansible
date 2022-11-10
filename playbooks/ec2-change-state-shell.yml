@@ -6,4 +6,5 @@
       args:
         state: running
         instance_tags:
-          Name: app1
+          Name: ansible-webserver-1
+
