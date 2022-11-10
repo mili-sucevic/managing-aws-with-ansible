@@ -1,5 +1,4 @@
 # hosts-dev
-
 [webservers]
 app1 ansible_host=3.225.84.133
 app2 ansible_host=54.237.109.5

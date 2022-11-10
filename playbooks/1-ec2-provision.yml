@@ -2,6 +2,7 @@
   gather_facts: no
   vars_files:
     - keys.yml
+  
   tasks:
     - name: Provision instance
       ec2:
@@ -9,37 +10,41 @@
         aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
         ec2_region: "{{ AWS_REGION }}"
         instance_type: t2.micro
-        keypair: ansible-course-key-pair.pem
-        image: ami-00c3885033e1d1507
+        keypair: ansible-course-key-pair
+        image: ami-0ff8a91507f77f867
         assign_public_ip: yes
-        vpc_subnet_id: 
-        group:
+        vpc_subnet_id: subnet-08465ac2049a6f83b
+        group_id: sg-0b3908d206100a950
         wait: true
         exact_count: 1
         count_tag:
-          Name: Demo
+          Name: Demo3
         instance_tags:
-          Name: Demo
-     register: ec2
-   - debug:
-       var: ec2
+          Name: Demo3
+      register: ec2
+    - debug:
+        var: ec2
 
-   - name: add host to inventory
-     add_host:
-       hostname: '{{ item.public_ip }}'
-       groupname: demogroup
-       ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
-       ansible_ssh_private_key_file: ../../../home/ansible/.ssh/ansible-course-key-pair.pem
-     loop: '{{ ec2.instances }}'
-
-- hosts: demogroup
-  gather_facts: no
-  remote_user: ec2-user
-  tasks:
-    - name: wait for SSH
-      wait_for_connection:
-        delay: 5
-        timeout: 90
+    - name: add host to inventory
+      add_host:
+        hostname: '{{ item.public_ip }}'
+        inventory_dir: hosts
+        groupname: launched
+        #ansible_ssh_common_aargs: "-o StrictHostKeyChecking=no"
+        #ansible_ssh_private_key_file: ../../../home/ansible/.ssh/ansible-course-key-pair.pem
+      loop: '{{ ec2.instances }}'
     
+    - name: Wait for SSH to come up
+      local_action:
+        module: wait_for
+        host: "{{ item.public_ip }}"
+        port: 22
+        delay: 10
+        timeout: 120
+      loop: "{{ ec2.instances }}"
+    # By specifying never on the tag of this block,
+    # I let this block to run only when explicitely being called
+      tags: ['never', 'ec2-create']
+
     - name: Check host status
       ping:

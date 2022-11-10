@@ -1,0 +1,13 @@
+- hosts: demo
+  become: yes
+  tasks:
+    - name: Update packages
+      yum:
+        name: "*"
+        state: latest
+    - name: Update image.txt
+      lineinfile:
+        path: /home/ansible/image.txt
+        line: "Image updated {{ ansible_date_time.date }}"
+    - name: Gather facts
+      ec2_metadata_facts:
