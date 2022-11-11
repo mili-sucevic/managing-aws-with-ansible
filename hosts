@@ -1,10 +1,10 @@
 # hosts-dev
 [webservers]
-app1 ansible_host=3.225.84.133
-app2 ansible_host=54.237.109.5
+app1 ansible_host=52.202.71.189
+app2 ansible_host=44.209.223.18
 
 [loadbalancers]
-lb1 ansible_host=52.73.255.110
+lb1 ansible_host=3.228.128.248
 
 [local]
 control ansible_connection=local

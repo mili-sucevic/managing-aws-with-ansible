@@ -1,0 +1,17 @@
+- hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - keys.yml
+  tasks:
+    - name: Get EC2 Instance Info
+      ec2_instance_info:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        filters:
+          instance-state-name: running
+          #availability-zone: us-east-1
+      register: ec2_facts
+    - debug:
+        var: ec2_facts

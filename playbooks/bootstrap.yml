@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tags: bootstrap
+  vars:
+     ansible_ssh_private_key_file: ../../../home/ec2-user/.ssh/ansible-course-key-pair.pem
+
+  become: true
+
+  roles:
+    - name: common
+
+      #  post_tasks:
+      #- name: Reboot
+      #reboot:
+      #become: true
+

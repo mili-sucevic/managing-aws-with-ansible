@@ -10,17 +10,17 @@
         aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
         region: "{{ AWS_REGION }}"
         filters:
-          tag:Name: ansible-webserver-1
+          tag:Name: Demo
       register: ec2_facts
 
-    - name: Stop webserver-1 Instance
+    - name: Stop existing EC2 Instance
       ec2:
         aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
         aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
         ec2_region: us-east-1
         state: stopped
         instance_tags:
-          Name: ansible-webserver-1
+          Name: Demo
 
     - name: Deploy new EC2 Instance
       ec2:
@@ -32,4 +32,4 @@
        assign_public_ip: yes
        vpc_subnet_id: "{{ ec2_facts.instances[0].subnet_id }}"
        instance_tags:
-         Name: ansible-webserver-4
+         Name: Demo2
