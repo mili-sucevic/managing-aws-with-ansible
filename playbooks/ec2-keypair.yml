@@ -1,0 +1,29 @@
+- hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - keys.yml
+
+  tasks:
+    - name: Remove Old Key
+      ec2_key:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        name: test-key-pair
+        state: absent
+
+    - name: Create a new EC2 Keypair
+      ec2_key:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        name: my-keypair
+      register: keypair
+
+    - name: Write new private key to file locally
+      lineinfile:
+        create: yes
+        path: /etc/managing-aws-with-ansible/my-keypair.pem
+        line: "{{ keypair.key.private_key}}"
+        mode: 0600
