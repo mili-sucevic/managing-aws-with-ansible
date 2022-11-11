@@ -1,0 +1,37 @@
+- hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - keys.yml
+      
+  tasks:
+    - name: Remove Volume
+      ec2_vol:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        id: vol-0822ead21e5860bbf
+        state: absent
+
+    - name: Create New EBS Volume
+      ec2_vol:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        zone: us-east-1f
+        volume_size: "1"
+        name: web_volume
+        device_name: /dev/xvdf
+      register: vol_info
+    - debug:
+        var: vol_info
+
+    - name: Attach Volume
+      ec2_vol:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        ec2_region: "{{ AWS_REGION }}"
+        zone: us-east-1f      
+        instance: i-0ecb92b87b93110cc
+        id: vol-01381a92f258277a0
+        delete_on_termination: yes
