@@ -1,0 +1,17 @@
+- hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - keys.yml
+  tasks:
+  - name: Terminate Instances
+    ec2:
+      aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+      aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+      ec2_region: "{{ AWS_REGION }}"
+      state: absent
+      instance_ids:
+        - "{{ ec2.instance_ids }}"
+    register: ec2
+  - debug:
+      var: ec2
