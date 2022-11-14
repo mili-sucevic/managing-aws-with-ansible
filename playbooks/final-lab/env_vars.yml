@@ -1,0 +1,6 @@
+--- # Variables to be used in Deploying to AWS with Ansible Lab
+BUCKET_NAME: mili-lab-solution-bucket-02
+AWS_REGION: us-east-1
+AMI_ID: ami-098bb5d92c8886ca1
+DEFAULT_VPC_SUBNET: subnet-0d14128445a8a54a3
+SEC_GROUP_NAME: default
